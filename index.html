@@ -3,26 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إعلانات التطبيق</title>
+    <title>Discord Manager Panel</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            background-color: #0d1117;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            background-color: #0b0f17;
+            color: #e2e8f0;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .custom-card {
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
         }
     </style>
 </head>
-<body>
+<body class="p-4 min-h-screen flex flex-col justify-between">
 
-    <!-- BEGIN AADS AD UNIT 2452663 -->
-    <div id="frame" style="width: 100%; margin: auto; position: relative; z-index: 99998;">
-        <iframe data-aa='2452663' src='//acceptable.a-ads.com/2452663/?size=Adaptive' style='border:0px; padding:0; width:100%; height:100%; overflow:hidden; background-color: transparent;'></iframe>
+    <div>
+        <!-- الهيدر -->
+        <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-3">
+            <h1 class="text-lg font-bold text-cyan-400 tracking-wider">DEATH NOTE</h1>
+            <span id="status-badge" class="text-xs bg-gray-800 text-gray-400 px-2 py-1 rounded">غير متصل</span>
+        </div>
+
+        <!-- الخطوة 1: إدخال التوكن -->
+        <div id="step-token" class="custom-card p-5 rounded-xl shadow-lg mb-4">
+            <h2 class="text-center text-cyan-400 text-xl font-bold mb-1">DeathNote C</h2>
+            <p class="text-center text-xs text-gray-400 mb-6">Made By #1888</p>
+            
+            <label class="block text-xs text-gray-400 mb-2">OR ADD NEW TOKEN</label>
+            <div class="flex gap-2 mb-4">
+                <select id="token-type" class="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg p-2.5 outline-none">
+                    <option value="Bot">Bot</option>
+                    <option value="User">User</option>
+                </select>
+                <input type="password" id="token-input" placeholder="Paste token here..." class="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg p-2.5 flex-1 outline-none">
+            </div>
+            <button onclick="connectToken()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold py-2.5 rounded-lg transition">CONNECT & SAVE</button>
+        </div>
+
+        <!-- الخطوة 2: لوحة التحكم -->
+        <div id="step-dashboard" class="hidden">
+            <div class="mb-4">
+                <label class="block text-xs text-gray-400 mb-1">SERVER</label>
+                <select id="server-select" class="w-full bg-gray-900 border border-gray-700 text-white text-sm rounded-lg p-2.5 outline-none">
+                    <option value="1521392110929051738">nuked (152139...)</option>
+                </select>
+            </div>
+
+            <!-- الأقسام -->
+            <div class="flex gap-2 overflow-x-auto pb-2 mb-4">
+                <button onclick="switchTab('channels')" class="tab-btn bg-cyan-500 text-gray-950 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap">CHANNELS</button>
+                <button onclick="switchTab('roles')" class="tab-btn bg-gray-900 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap">ROLES</button>
+                <button onclick="switchTab('members')" class="tab-btn bg-gray-900 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap">MEMBERS</button>
+                <button onclick="switchTab('spam')" class="tab-btn bg-gray-900 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap">SPAM</button>
+            </div>
+
+            <!-- محتوى القنوات -->
+            <div id="content-channels" class="tab-content custom-card p-4 rounded-xl space-y-4">
+                <div>
+                    <h3 class="text-sm font-bold text-white mb-1">DELETE ALL CHANNELS</h3>
+                    <button onclick="actionAlert('تم إرسال أمر حذف القنوات')" class="w-full bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold py-2 rounded-lg text-sm">DELETE ALL CHANNELS</button>
+                </div>
+            </div>
+            
+            <!-- بقية الأقسام -->
+            <div id="content-roles" class="tab-content custom-card p-4 rounded-xl hidden">
+                <h3 class="text-sm font-bold text-white mb-2">إدارة الرولات</h3>
+                <button onclick="actionAlert('تم حذف الرولات')" class="w-full bg-red-600 text-white font-bold py-2 rounded-lg text-sm">DELETE ALL ROLES</button>
+            </div>
+            
+            <div id="content-members" class="tab-content custom-card p-4 rounded-xl hidden">
+                <h3 class="text-sm font-bold text-white mb-2">إدارة الأعضاء</h3>
+                <button onclick="actionAlert('تم حظر الجميع')" class="w-full bg-red-600 text-white font-bold py-2 rounded-lg text-sm">BAN ALL MEMBERS</button>
+            </div>
+
+            <div id="content-spam" class="tab-content custom-card p-4 rounded-xl hidden">
+                <h3 class="text-sm font-bold text-white mb-2">السبام الشامل</h3>
+                <button onclick="actionAlert('بدأ إرسال السبام')" class="w-full bg-cyan-500 text-gray-950 font-bold py-2 rounded-lg text-sm">START SPAM</button>
+            </div>
+        </div>
     </div>
-    <!-- END AADS AD UNIT 2452663 -->
 
+    <!-- الكونسول والسجل -->
+    <div class="mt-4 bg-black/80 border border-gray-800 p-3 rounded-lg font-mono text-[11px] text-green-400">
+        <div id="log-box">[11:59:07] Waiting for token connection...</div>
+    </div>
+
+    <script>
+        function connectToken() {
+            const token = document.getElementById('token-input').value;
+            if(!token) { alert('الرجاء إدخال التوكن!'); return; }
+            document.getElementById('step-token').classList.add('hidden');
+            document.getElementById('step-dashboard').classList.remove('hidden');
+            document.getElementById('status-badge').innerText = 'Connected';
+            document.getElementById('status-badge').className = 'text-xs bg-green-900 text-green-300 px-2 py-1 rounded';
+            document.getElementById('log-box').innerText = '[12:00:00] Connected successfully!';
+        }
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('bg-cyan-500', 'text-gray-950');
+                el.classList.add('bg-gray-900', 'text-gray-400');
+            });
+            document.getElementById('content-' + tabName).classList.remove('hidden');
+            event.target.classList.remove('bg-gray-900', 'text-gray-400');
+            event.target.classList.add('bg-cyan-500', 'text-gray-950');
+        }
+        function actionAlert(msg) {
+            document.getElementById('log-box').innerText = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+        }
+    </script>
 </body>
 </html>

@@ -3,117 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Manager Panel</title>
-    <!-- Tailwind CSS CDN -->
+    <title>DeathNote C</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            background-color: #0b0f17;
-            color: #e2e8f0;
-            font-family: system-ui, -apple-system, sans-serif;
-        }
-        .custom-card {
-            background: rgba(17, 24, 39, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+        body { font-family: 'Cairo', sans-serif; background: #050505; color: #fff; }
+        .glass { background: rgba(15, 15, 15, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(0, 255, 255, 0.1); }
+        .active-tab { border-bottom: 2px solid #06b6d4; color: #06b6d4; }
     </style>
 </head>
-<body class="p-4 min-h-screen flex flex-col justify-between">
+<body class="p-4">
 
-    <div>
-        <!-- الهيدر -->
-        <div class="flex justify-between items-center mb-6 border-b border-gray-800 pb-3">
-            <h1 class="text-lg font-bold text-cyan-400 tracking-wider">DEATH NOTE</h1>
-            <span id="status-badge" class="text-xs bg-gray-800 text-gray-400 px-2 py-1 rounded">غير متصل</span>
-        </div>
-
-        <!-- الخطوة 1: إدخال التوكن -->
-        <div id="step-token" class="custom-card p-5 rounded-xl shadow-lg mb-4">
-            <h2 class="text-center text-cyan-400 text-xl font-bold mb-1">DeathNote C</h2>
-            <p class="text-center text-xs text-gray-400 mb-6">Made By #1888</p>
-            
-            <label class="block text-xs text-gray-400 mb-2">OR ADD NEW TOKEN</label>
-            <div class="flex gap-2 mb-4">
-                <select id="token-type" class="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg p-2.5 outline-none">
-                    <option value="Bot">Bot</option>
-                    <option value="User">User</option>
-                </select>
-                <input type="password" id="token-input" placeholder="Paste token here..." class="bg-gray-900 border border-gray-700 text-white text-sm rounded-lg p-2.5 flex-1 outline-none">
-            </div>
-            <button onclick="connectToken()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold py-2.5 rounded-lg transition">CONNECT & SAVE</button>
-        </div>
-
-        <!-- الخطوة 2: لوحة التحكم -->
-        <div id="step-dashboard" class="hidden">
-            <div class="mb-4">
-                <label class="block text-xs text-gray-400 mb-1">SERVER</label>
-                <select id="server-select" class="w-full bg-gray-900 border border-gray-700 text-white text-sm rounded-lg p-2.5 outline-none">
-                    <option value="1521392110929051738">nuked (152139...)</option>
-                </select>
-            </div>
-
-            <!-- الأقسام -->
-            <div class="flex gap-2 overflow-x-auto pb-2 mb-4">
-                <button onclick="switchTab('channels')" class="tab-btn bg-cyan-500 text-gray-950 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap">CHANNELS</button>
-                <button onclick="switchTab('roles')" class="tab-btn bg-gray-900 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap">ROLES</button>
-                <button onclick="switchTab('members')" class="tab-btn bg-gray-900 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap">MEMBERS</button>
-                <button onclick="switchTab('spam')" class="tab-btn bg-gray-900 text-gray-400 px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap">SPAM</button>
-            </div>
-
-            <!-- محتوى القنوات -->
-            <div id="content-channels" class="tab-content custom-card p-4 rounded-xl space-y-4">
-                <div>
-                    <h3 class="text-sm font-bold text-white mb-1">DELETE ALL CHANNELS</h3>
-                    <button onclick="actionAlert('تم إرسال أمر حذف القنوات')" class="w-full bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold py-2 rounded-lg text-sm">DELETE ALL CHANNELS</button>
-                </div>
-            </div>
-            
-            <!-- بقية الأقسام -->
-            <div id="content-roles" class="tab-content custom-card p-4 rounded-xl hidden">
-                <h3 class="text-sm font-bold text-white mb-2">إدارة الرولات</h3>
-                <button onclick="actionAlert('تم حذف الرولات')" class="w-full bg-red-600 text-white font-bold py-2 rounded-lg text-sm">DELETE ALL ROLES</button>
-            </div>
-            
-            <div id="content-members" class="tab-content custom-card p-4 rounded-xl hidden">
-                <h3 class="text-sm font-bold text-white mb-2">إدارة الأعضاء</h3>
-                <button onclick="actionAlert('تم حظر الجميع')" class="w-full bg-red-600 text-white font-bold py-2 rounded-lg text-sm">BAN ALL MEMBERS</button>
-            </div>
-
-            <div id="content-spam" class="tab-content custom-card p-4 rounded-xl hidden">
-                <h3 class="text-sm font-bold text-white mb-2">السبام الشامل</h3>
-                <button onclick="actionAlert('بدأ إرسال السبام')" class="w-full bg-cyan-500 text-gray-950 font-bold py-2 rounded-lg text-sm">START SPAM</button>
-            </div>
-        </div>
+    <!-- الهيدر -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-xl font-bold text-cyan-500">DEATH NOTE C</h1>
+        <div id="status" class="w-3 h-3 rounded-full bg-red-500"></div>
     </div>
 
-    <!-- الكونسول والسجل -->
-    <div class="mt-4 bg-black/80 border border-gray-800 p-3 rounded-lg font-mono text-[11px] text-green-400">
-        <div id="log-box">[11:59:07] Waiting for token connection...</div>
+    <!-- لوحة الدخول -->
+    <div id="login-box" class="glass p-6 rounded-2xl">
+        <input type="password" id="token" placeholder="Paste token here..." class="w-full bg-black/50 border border-cyan-900 p-3 rounded-xl mb-4 outline-none">
+        <button onclick="login()" class="w-full bg-cyan-600 p-3 rounded-xl font-bold">CONNECT & SAVE</button>
+    </div>
+
+    <!-- لوحة التحكم الرئيسية -->
+    <div id="main-panel" class="hidden space-y-4">
+        <!-- تبديل الأقسام -->
+        <div class="flex gap-4 overflow-x-auto pb-2 text-sm font-bold text-gray-400">
+            <button onclick="switchTab('channels')" class="active-tab">CHANNELS</button>
+            <button onclick="switchTab('roles')">ROLES</button>
+            <button onclick="switchTab('spam')">SPAM</button>
+            <button onclick="switchTab('server')">SERVER</button>
+        </div>
+
+        <!-- محتوى القسم -->
+        <div class="glass p-4 rounded-xl space-y-3">
+            <div id="tab-content">
+                <!-- هذا القسم يتغير حسب الزر المختار -->
+                <h3 class="text-cyan-500 font-bold mb-2">CHANNELS</h3>
+                <button class="w-full bg-red-900/20 border border-red-500 p-2 rounded-lg text-sm">Delete All Channels</button>
+                <input type="text" placeholder="Channel Name" class="w-full bg-black/50 border border-gray-700 p-2 rounded-lg mt-2">
+                <input type="number" placeholder="Count" class="w-full bg-black/50 border border-gray-700 p-2 rounded-lg mt-2">
+                <button class="w-full bg-cyan-600 p-2 rounded-lg mt-2 font-bold">CREATE CHANNELS</button>
+            </div>
+        </div>
+        
+        <!-- زر الـ ALL -->
+        <button class="w-full bg-red-600 p-4 rounded-xl font-bold animate-pulse">ALL SETTINGS (EXECUTE)</button>
     </div>
 
     <script>
-        function connectToken() {
-            const token = document.getElementById('token-input').value;
-            if(!token) { alert('الرجاء إدخال التوكن!'); return; }
-            document.getElementById('step-token').classList.add('hidden');
-            document.getElementById('step-dashboard').classList.remove('hidden');
-            document.getElementById('status-badge').innerText = 'Connected';
-            document.getElementById('status-badge').className = 'text-xs bg-green-900 text-green-300 px-2 py-1 rounded';
-            document.getElementById('log-box').innerText = '[12:00:00] Connected successfully!';
+        function login() {
+            document.getElementById('login-box').classList.add('hidden');
+            document.getElementById('main-panel').classList.remove('hidden');
+            document.getElementById('status').className = 'w-3 h-3 rounded-full bg-green-500';
         }
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(el => {
-                el.classList.remove('bg-cyan-500', 'text-gray-950');
-                el.classList.add('bg-gray-900', 'text-gray-400');
-            });
-            document.getElementById('content-' + tabName).classList.remove('hidden');
-            event.target.classList.remove('bg-gray-900', 'text-gray-400');
-            event.target.classList.add('bg-cyan-500', 'text-gray-950');
-        }
-        function actionAlert(msg) {
-            document.getElementById('log-box').innerText = '[' + new Date().toLocaleTimeString() + '] ' + msg;
+
+        function switchTab(tab) {
+            const content = document.getElementById('tab-content');
+            if(tab === 'channels') {
+                content.innerHTML = `<h3 class="text-cyan-500 font-bold mb-2">CHANNELS</h3><button class="w-full bg-red-900/20 border border-red-500 p-2 rounded-lg text-sm">Delete All Channels</button><input type="text" placeholder="Name" class="w-full bg-black/50 border border-gray-700 p-2 rounded-lg mt-2"><button class="w-full bg-cyan-600 p-2 rounded-lg mt-2 font-bold">CREATE</button>`;
+            } else if(tab === 'roles') {
+                content.innerHTML = `<h3 class="text-cyan-500 font-bold mb-2">ROLES</h3><button class="w-full bg-red-900/20 border border-red-500 p-2 rounded-lg text-sm">Delete All Roles</button><button class="w-full bg-green-900/20 border border-green-500 p-2 rounded-lg mt-2">Give Everyone Admin</button>`;
+            } else if(tab === 'spam') {
+                content.innerHTML = `<h3 class="text-cyan-500 font-bold mb-2">SPAM</h3><textarea class="w-full bg-black/50 p-2 rounded-lg" placeholder="Message..."></textarea><button class="w-full bg-cyan-600 p-2 rounded-lg mt-2">START SPAM</button>`;
+            } else if(tab === 'server') {
+                content.innerHTML = `<h3 class="text-cyan-500 font-bold mb-2">SERVER</h3><button class="w-full bg-red-900/20 border border-red-500 p-2 rounded-lg">Delete All Emojis</button><input placeholder="New Server Name" class="w-full bg-black/50 p-2 mt-2 rounded-lg">`;
+            }
         }
     </script>
 </body>
